@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <title>Raspi remote</title>
+    
+    <head>
+        <link rel="stylesheet" type="text/css" href="public/style.css" />
+        <link rel="icon" href="public/favicon.png" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    </head>
+    
+    <body>
+        <div class="main">
+            <div class="top">
+                <div class="paintmenu">
+                    <div class="painttools">
+                        <button>
+                            <img src="winicons/turnoff.ico">
+                        </button>
+                        <button>
+                            <img src="img/loop.png">
+                        </button>
+                        <button>
+                            <img src="img/mute.png">
+                        </button>
+                        <button>d</button>
+                        <button>e</button>
+                        <button>f</button>
+                        <button>g</button>
+                        <button>h</button>
+                    </div>
+                    <div class="palette">
+                        <my-palette></my-palette>
+                    </div>
+                </div>
+                <div class="playlist">
+                    <my-playlist></my-playlist> 
+                </div>
+            </div>
+            <div class="player">
+                <my-player title="Lorem Ipsum"></my-player>
+            </div>
+        </div>
+        <div class="navbar">
+            <my-navbar></my-navbar>
+        </div>
+
+        <script type="module" src="components/navbar.js"></script>
+        <script type="module" src="components/titlebar.js"></script>
+        <script type="module" src="components/progress.js"></script>
+        <script type="module" src="components/player.js"></script>
+        <script type="module" src="components/playlist.js"></script>
+        <script type="module" src="components/palette.js"></script>
+
+    </body>
+</html>

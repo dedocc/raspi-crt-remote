@@ -1,6 +1,6 @@
 # list files
 list_videos () {
-    VIDEO_DIR="/home/andrea/"
+    VIDEO_DIR="/home/andrea/Video"
     ls -p $VIDEO_DIR | grep -E -v /$ | jq -R -s -c 'split("\n")[:-1]'
 }
 
@@ -8,7 +8,7 @@ mpv_call() {
     #Wrapper
     #MPV_SOCKET="/tmp/mpv.socket"
     MPV_SOCKET="/tmp/test"
-    echo "$*"  | socat -u - $MPV_SOCKET
+    echo "$*"  | socat - $MPV_SOCKET
 }
 mpv_play_pause() {
     mpv_call cycle pause
@@ -27,13 +27,12 @@ mpv_get_info() {
               {"command": ["get_property", "duration"]},
               {"command": ["get_property", "time-pos"]},
               {"command": ["get_property", "core-idle"]},
-              {"command": ["get_property", "volume"]},
-             
+              {"command": ["get_property", "volume"]} 
              ' | jq -s '{filename: .[0].data,
                          duration: .[1].data,
                          position: .[2].data,
                          isPlaying: .[3].data,
-                         volume: .[4].data'
+                         volume: .[4].data}'
 }
 
 

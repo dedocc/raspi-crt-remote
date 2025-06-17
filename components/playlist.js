@@ -7,6 +7,10 @@ class Playlist extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = `
             <style>
+                * {
+                    box-sizing: border-box;
+                }
+
                 .wrapper {
                     border: 3px solid #e2e2e2;
                     background-color: #C0C0C0;
@@ -14,7 +18,6 @@ class Playlist extends HTMLElement {
                 }
                 .content {
                     overflow: hidden;
-                    padding: 0px 10px;
                     display: flex;
                     flex-direction: column;
                 }
@@ -41,8 +44,8 @@ class Playlist extends HTMLElement {
 
                 .list {
                     height: 400px;
-                    width: 100%;
                     padding: 5px;
+                    margin: 10px;
                     list-style-type: none;
                     background-color: #fff;
                     border: 1px solid #000;

@@ -25,7 +25,7 @@ body {
 
 .main {
     width: 100%;
-    max-width: 500px;
+    max-width: fit-content;
     height: 90%;
     justify-self: center;
 }

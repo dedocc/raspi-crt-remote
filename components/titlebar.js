@@ -36,7 +36,7 @@ class Titlebar extends HTMLElement {
                     border-color: white black black white;
                     background-color: #c0c0c0;
                     height: 100%;
-                    width: 22px;
+                    width: 21px;
                     padding: 0px;
                 }
             </style>

@@ -41,7 +41,7 @@ class Playlist extends HTMLElement {
 
                 .list {
                     height: 400px;
-                    width: 220px;
+                    width: 100%;
                     padding: 5px;
                     list-style-type: none;
                     background-color: #fff;

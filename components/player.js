@@ -72,9 +72,9 @@ class Player extends HTMLElement {
                     </p>
                     <my-progressbar value="0"></my-progressbar>
                     <div class="controls">
-                        <button>⏮</button>
-                        <button>⏯</button>
-                        <button>⏭</button>
+                        <button id="prev">⏮</button>
+                        <button id="play">⏯</button>
+                        <button id="next">⏭</button>
                     </div>
                 </div>
             </div>
@@ -86,7 +86,14 @@ class Player extends HTMLElement {
         this._resizeHandler = this.updateTitleScrolling.bind(this);
     }
 
-    connectedCallback() {
+    async connectedCallback() {
+        this.videoProps = await (await fetch(`http://${location.hostname}:8081/get-video-props`)).json();
+
+        this.setAttribute('title', this.videoProps.filename);
+        this.isPlaying = !this.videoProps.isPlaying;
+        
+        this.shadowRoot.getElementById('play').onclick = () => this.mpvPlay();
+
         this.updateTitle();
         this.updateTitleScrolling();
         window.addEventListener('resize', this._resizeHandler);
@@ -94,6 +101,12 @@ class Player extends HTMLElement {
 
     disconnectedCallback() {
         window.removeEventListener('resize', this._resizeHandler);
+    }
+
+    async mpvPlay() {
+        await fetch(`http://${location.hostname}:8081/play`);
+        // cycle "isplaying" variable
+        this.isPlaying = !this.isPlaying;
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

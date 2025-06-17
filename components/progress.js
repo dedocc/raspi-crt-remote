@@ -83,7 +83,20 @@ class Progressbar extends HTMLElement {
   set(e) {
     const r = this.bar.getBoundingClientRect();
     const v = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    this.mpv_seek(v*100);
     this.setAttribute('value', v);
+  }
+
+  async mpv_seek(percentage) {
+      await fetch(`http://${location.hostname}:8081/mpv-seek`, {
+          method: "POST",
+          headers: {
+              "Content-type": "application/json"
+          },
+          body: JSON.stringify({
+              "command": ["set_property", "percent-pos", percentage]
+          })
+      });
   }
 
   update() {

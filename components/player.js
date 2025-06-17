@@ -70,7 +70,7 @@ class Player extends HTMLElement {
                         <span class="scroll-text"></span>
                         <span class="scroll-text"></span>
                     </p>
-                    <my-progressbar value="0"></my-progressbar>
+                    <my-progressbar id="progressbar"></my-progressbar>
                     <div class="controls">
                         <button id="prev">⏮</button>
                         <button id="play">⏯</button>
@@ -90,7 +90,9 @@ class Player extends HTMLElement {
         this.videoProps = await (await fetch(`http://${location.hostname}:8081/get-video-props`)).json();
 
         this.setAttribute('title', this.videoProps.filename);
+        this.shadowRoot.getElementById("progressbar").setAttribute('value', this.videoProps.percent/100);
         this.isPlaying = !this.videoProps.isPlaying;
+
         
         this.shadowRoot.getElementById('play').onclick = () => this.mpvPlay();
 

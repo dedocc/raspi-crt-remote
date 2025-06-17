@@ -17,10 +17,10 @@
                         <button>
                             <img src="winicons/turnoff.ico">
                         </button>
-                        <button>
+                        <button onclick="mpvCall('loop')">
                             <img src="img/loop.png">
                         </button>
-                        <button>
+                        <button onclick="mpvCall('mute')">
                             <img src="img/mute.png">
                         </button>
                         <button>d</button>
@@ -51,6 +51,11 @@
         <script type="module" src="components/player.js"></script>
         <script type="module" src="components/playlist.js"></script>
         <script type="module" src="components/palette.js"></script>
-
+        
+        <script>
+            async function mpvCall(cmd) {
+                await fetch(`http://${location.hostname}:8081/${cmd}`);
+            }
+        </script>
     </body>
 </html>

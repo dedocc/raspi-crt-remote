@@ -87,18 +87,23 @@ class Player extends HTMLElement {
     }
 
     async connectedCallback() {
-        this.videoProps = await (await fetch(`http://${location.hostname}:8081/get-video-props`)).json();
-
-        this.setAttribute('title', this.videoProps.filename);
-        this.shadowRoot.getElementById("progressbar").setAttribute('value', this.videoProps.percent/100);
-        this.isPlaying = !this.videoProps.isPlaying;
-
+        await window.mpvPropsReady;
+        this.setAttribute('title', window.mpvProps.filename);
+        console.log('title ', window.mpvProps.filename);
+        this.shadowRoot.getElementById("progressbar").setAttribute('value', window.mpvProps["percent-pos"]/100);
         
         this.shadowRoot.getElementById('play').onclick = () => this.mpvPlay();
 
         this.updateTitle();
         this.updateTitleScrolling();
         window.addEventListener('resize', this._resizeHandler);
+
+        document.addEventListener("mpv-update", e => {
+            const { name, data } = e.detail;
+            if (name === "percent-pos") {
+                this.shadowRoot.getElementById("progressbar").setAttribute('value', data / 100);
+            }
+        });
     }
 
     disconnectedCallback() {
@@ -107,8 +112,6 @@ class Player extends HTMLElement {
 
     async mpvPlay() {
         await fetch(`http://${location.hostname}:8081/play`);
-        // cycle "isplaying" variable
-        this.isPlaying = !this.isPlaying;
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -119,7 +122,7 @@ class Player extends HTMLElement {
 
     updateTitle() {
         const title = this.getAttribute('title') || '';
-        this.spans.forEach(span => span.textContent = title);
+    this.spans.forEach(span => span.textContent = title);
         this.updateTitleScrolling();
     }
     updateTitleScrolling() {

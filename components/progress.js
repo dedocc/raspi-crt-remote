@@ -41,7 +41,7 @@ class Progressbar extends HTMLElement {
         progress::-webkit-progress-value { background: var(--accent-color); }
       </style>
       <div class="progress-bar">
-        <progress id="progress" value="0" max="1"></progress>
+        <progress id="progress" max="1"></progress>
         <p class="progress-text">0%</p>
       </div>
     `;
@@ -51,7 +51,8 @@ class Progressbar extends HTMLElement {
     this.drag = false;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
+    await window.mpvPropsReady;
     this.bar.addEventListener('mousedown', e => this.start(e));
     this.bar.addEventListener('touchstart', e => this.start(e.touches[0]), { passive: false });
     document.addEventListener('mousemove', e => this.move(e));
@@ -59,6 +60,12 @@ class Progressbar extends HTMLElement {
     document.addEventListener('mouseup', () => this.end());
     document.addEventListener('touchend', () => this.end());
     this.update();
+    document.addEventListener("mpv-update", e => {
+        const { name, data } = e.detail;
+        if (name === "time-pos") {
+            this.text.textContent = this.convert_seconds(data*1000);
+        }
+    });
   }
 
   attributeChangedCallback() {
@@ -87,6 +94,10 @@ class Progressbar extends HTMLElement {
     this.setAttribute('value', v);
   }
 
+    convert_seconds(value) {
+        return new Date(value).toISOString().slice(11, 19);
+    }
+
   async mpv_seek(percentage) {
       await fetch(`http://${location.hostname}:8081/mpv-seek`, {
           method: "POST",
@@ -102,7 +113,6 @@ class Progressbar extends HTMLElement {
   update() {
     const v = parseFloat(this.getAttribute('value')) || 0;
     this.progress.value = v;
-    this.text.textContent = `${Math.round(v * 100)}%`;
   }
 }
 

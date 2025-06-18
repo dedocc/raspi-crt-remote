@@ -95,9 +95,10 @@ main() {
         *list-videos*) get_reply application/json; list_videos;;
         *get-video-props*) get_reply application/json; mpv_get_info;;
         *play*) get_reply; mpv_play_pause;;
+        *set-volume*) post_reply; mpv_call $(parse_post);;
         *mute*) get_reply; mpv_mute;;
         *loop*) get_reply; mpv_loop;;
-        *mpv-seek*) post_reply; mpv_call $(parse_post) ;;
+        *mpv-seek*) post_reply; mpv_call $(parse_post);;
         #*poweroff*) poweroff;;
     esac
 }

@@ -66,12 +66,15 @@ class Navbar extends HTMLElement {
                     </button>
                 </div>
                 <div class="tray">
-                    <img src="img/volume.png" alt="volumeicon">
+                    <div id="volumebutton" onclick="window.toggleVolume()">
+                        <img src="img/volume.png" alt="volumeicon">
+                    </div>
                     <p id="clock">--:--</p>
                 </div>
             </nav>
         `;
         this.clockElement = this.shadowRoot.getElementById('clock');
+        window.volumeButton = this.shadowRoot.getElementById('volumebutton');
     }
     connectedCallback() {
         this.updateClock();

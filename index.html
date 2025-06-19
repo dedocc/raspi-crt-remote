@@ -17,17 +17,19 @@
         <script type="module" src="components/playlist.js"></script>
         <script type="module" src="components/palette.js"></script>
         <script type="module" src="components/volume.js"></script>
+        <script type="module" src="components/shutdown.js"></script>
     </head>
     
     <body>
         <div class="main">
+            <my-shutdown id="shutdownmenu" hidden></my-shutdown>
             <div class="top">
                 <div class="paintmenu">
                     <div class="painttools">
-                        <button>
-                            <img src="winicons/turnoff.ico">
+                        <button onclick="openShutdownMenu()">
+                            <img src="img/turnoff.ico">
                         </button>
-                        <button onclick="mpvCall('loop')">
+                        <button onclick="mpvToggleLoop()">
                             <img src="img/loop.png">
                         </button>
                         <button onclick="mpvToggleMute()">
@@ -59,6 +61,11 @@
         <script>
             this.ws = new WebSocket(`ws://${location.hostname}:8082`);
             const vw = document.querySelector("my-volume");
+            const shutdownmenu = document.getElementById("shutdownmenu");
+
+            function openShutdownMenu() {
+                shutdownmenu.hidden = false;
+            }
 
             function toggleVolume() {
                 vw.hidden = !vw.hidden;

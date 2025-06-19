@@ -46,7 +46,7 @@ class Titlebar extends HTMLElement {
                     <img id="tb-icon" src="" alt="titlebar icon">
                     <p id="title">Window Title</p>
                 </div>
-                    <button>✕</button>
+                    <button id="closeBtn">✕</button>
             </bar>
         `;
         
@@ -58,6 +58,12 @@ class Titlebar extends HTMLElement {
         // Initialize values when component is added to DOM
         this.updateImage();
         this.updateCaption();
+        this.shadowRoot.getElementById("closeBtn").onclick = () => {
+            this.dispatchEvent(new CustomEvent("close", {
+                bubbles: "true",
+                composed: "true",
+            }));
+        };
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

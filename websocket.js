@@ -1,6 +1,8 @@
-import { WebSocketServer } from 'ws';
-import net from 'net';
-import fs from 'fs';
+const { WebSocketServer } = require('ws');
+const net = require('net');
+const fs = require('fs');
+const { exec } = require("child_process");
+
 
 const videosPath = '/home/andrea/Video';
 const mpvSocketPath = '/tmp/test';
@@ -18,13 +20,12 @@ wss.on('connection', ws => {
      });
 
     mpv.on('data', chunk => {
-        console.log(chunk.toString())
         ws.send(chunk.toString());
     });
 
     ws.on('message', msg => {
         const parsed = JSON.parse(msg.toString());
-        console.log(parsed);
+        //console.log(parsed);
         if (typeof parsed === 'string') {
             switch (parsed) {
                 case "play":
@@ -58,6 +59,10 @@ wss.on('connection', ws => {
                     const dirents = fs.readdirSync(videosPath, {withFileTypes: true});
                     const filenames = dirents.filter(dirent => dirent.isFile()).map(dirent => dirent.name);
                     ws.send(JSON.stringify({ "event" :"videolist", "list":filenames}));
+                    break;
+                case "poweroff":
+                    console.log("The system would have correctly powered off");
+                    exec("beep");
                     break;
             }
         } else {

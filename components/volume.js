@@ -113,7 +113,6 @@ class Volume extends HTMLElement {
         
         document.addEventListener("mpv-update", e => {
             const { name, data } = e.detail;
-            console.log(name, data);
             if (name === "volume") {
                 this.bar.value = data;
             }

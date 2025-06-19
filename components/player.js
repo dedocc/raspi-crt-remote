@@ -87,31 +87,28 @@ class Player extends HTMLElement {
     }
 
     async connectedCallback() {
+        document.addEventListener("mpv-update", e => {
+            const { name, data } = e.detail;
+            if (name === "percent-pos") {
+                this.shadowRoot.getElementById("progressbar").setAttribute('value', data / 100);
+            } else if (name === "filename") {
+                this.setAttribute('title', data);
+            }
+        });
         await window.mpvPropsReady;
         this.setAttribute('title', window.mpvProps.filename);
-        console.log('title ', window.mpvProps.filename);
         this.shadowRoot.getElementById("progressbar").setAttribute('value', window.mpvProps["percent-pos"]/100);
         
-        this.shadowRoot.getElementById('play').onclick = () => this.mpvPlay();
+        this.shadowRoot.getElementById('play').onclick = () => mpvTogglePause();
 
         this.updateTitle();
         this.updateTitleScrolling();
         window.addEventListener('resize', this._resizeHandler);
 
-        document.addEventListener("mpv-update", e => {
-            const { name, data } = e.detail;
-            if (name === "percent-pos") {
-                this.shadowRoot.getElementById("progressbar").setAttribute('value', data / 100);
-            }
-        });
     }
 
     disconnectedCallback() {
         window.removeEventListener('resize', this._resizeHandler);
-    }
-
-    async mpvPlay() {
-        await fetch(`http://${location.hostname}:8081/play`);
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

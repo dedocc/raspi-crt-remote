@@ -64,26 +64,24 @@ class Playlist extends HTMLElement {
         `;
     }
     async connectedCallback() {
-        const response = await fetch(`http://${location.hostname}:8081/list-videos`);
-        const fileListArray = await response.json();
-        
-        const list = this.shadowRoot.getElementById("list");
-        fileListArray.forEach(itemText => {
-            const li = document.createElement("li");
-            li.textContent = itemText;
-            li.onclick = () => this.selectItem(li);            
-            list.appendChild(li);
+        getVideoList();
+        document.addEventListener("videolist", (e) => {
+            const fileListArray = e.detail;
+            const list = this.shadowRoot.getElementById("list");
+            fileListArray.forEach(itemText => {
+                const li = document.createElement("li");
+                li.textContent = itemText;
+                li.onclick = () => this.selectItem(li);            
+                list.appendChild(li);
+            });
         });
     }
 
     selectItem(clickedLi) {
         this.shadowRoot.querySelectorAll('li').forEach(li => li.classList.remove('selected') );
         clickedLi.classList.add('selected');
-        this.dispatchEvent(new CustomEvent('item-selected', {
-            detail: { value: clickedLi.textContent },
-            bubbles: true,
-            composed: true
-        }));
+        mpvOpenVideo(clickedLi.textContent);
+        mpvPlay()
     }
 }
 customElements.define("my-playlist", Playlist);

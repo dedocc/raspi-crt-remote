@@ -98,7 +98,7 @@ class Volume extends HTMLElement {
                     <div class="ticks">
                         <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                     </div>
-                    <input class="volumebar" type="range"/>
+                    <input class="volumebar" type="range" min="0" max="100" oninput="mpvSetVolume(this.value)"/>
                     <div class="ticks">
                         <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                     </div>
@@ -109,36 +109,17 @@ class Volume extends HTMLElement {
         this.drag = false;
     }
     
-    connectedCallback() {
-        this.bar.addEventListener('mousedown', e => this.start(e));
-        this.bar.addEventListener('touchstart', e => this.start(e.touches[0]), { passive: false });
-        document.addEventListener('mousemove', e => this.move(e));
-        document.addEventListener('touchmove', e => this.move(e.touches[0]), { passive: false });
-        document.addEventListener('mouseup', () => this.end());
-        document.addEventListener('touchend', () => this.end());
-        //this.update();
+    async connectedCallback() {
+        
+        document.addEventListener("mpv-update", e => {
+            const { name, data } = e.detail;
+            console.log(name, data);
+            if (name === "volume") {
+                this.bar.value = data;
+            }
+        });
+        await window.mpvPropsReady;
     }
-    
-    start(e) {
-        this.drag = true;
-        this.set(e);
-    }
-
-    move(e) {
-        if (this.drag) {
-            this.set(e);
-        }
-    }
-
-    end() {
-        this.drag = false;
-    }
-
-    set(e) {
-        let v = this.bar.getAttribute("value");
-        this.mpv_volume(v);
-    }
-
     async mpv_volume(percentage) {
       await fetch(`http://${location.hostname}:8081/set-volume`, {
           method: "POST",

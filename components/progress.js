@@ -42,7 +42,7 @@ class Progressbar extends HTMLElement {
       </style>
       <div class="progress-bar">
         <progress id="progress" max="1"></progress>
-        <p class="progress-text">0%</p>
+        <p class="progress-text"></p>
       </div>
     `;
     this.bar = this.shadowRoot.querySelector('.progress-bar');
@@ -73,42 +73,35 @@ class Progressbar extends HTMLElement {
   }
 
   start(e) {
+    this.wasPaused = window.mpvProps.pause;
+    mpvPause();
     this.drag = true;
     this.set(e);
   }
 
   move(e) {
-    if (this.drag) {
-      this.set(e);
-    }
+    if (!this.drag) return;
+    this.set(e);
   }
 
   end() {
+    if (!this.drag) return;
+    if (!this.wasPaused) {
+        mpvPlay();
+    }
     this.drag = false;
   }
 
   set(e) {
     const r = this.bar.getBoundingClientRect();
     const v = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-    this.mpv_seek(v*100);
+    mpvSeek(v*100);
     this.setAttribute('value', v);
   }
 
     convert_seconds(value) {
         return new Date(value).toISOString().slice(11, 19);
     }
-
-  async mpv_seek(percentage) {
-      await fetch(`http://${location.hostname}:8081/mpv-seek`, {
-          method: "POST",
-          headers: {
-              "Content-type": "application/json"
-          },
-          body: JSON.stringify({
-              "command": ["set_property", "percent-pos", percentage]
-          })
-      });
-  }
 
   update() {
     const v = parseFloat(this.getAttribute('value')) || 0;
